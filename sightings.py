@@ -5,7 +5,7 @@ df = pd.read_csv('updated.csv')
 
 fig = go.Figure()
 
-
+# Trial comment for git
 
 fig.add_trace(go.Scattermapbox(
         lat=df.latitude,
