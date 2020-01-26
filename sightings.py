@@ -1,7 +1,7 @@
 import plotly.graph_objects as go
 import pandas as pd
 
-df = pd.read_csv('updated.csv')
+df = pd.read_csv('/home/arjun/Documents/SFU_Course_Work/Spring2020/cmpt733/blog/blog_git/blog-733/updated.csv')
 
 fig = go.Figure()
 
@@ -42,3 +42,6 @@ fig.update_layout(
 )
 
 fig.show()
+
+if __name__ == "__main__":
+    app.run_server(debug=True)
