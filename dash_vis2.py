@@ -7,28 +7,37 @@ import pandas as pd
 import plotly.graph_objects as go
 import os
 import plotly.express as px
+import random
 
 df = pd.DataFrame(columns = ['UFO_shape','country','latitude','longitude'])
-path = '/home/arjun/Documents/SFU_Course_Work/Spring2020/cmpt733/blog/blog_git/blog-733/updated.csv'
+path = 'updated.csv'
 data = pd.read_csv(path)
+
+number_of_colors = len(data['UFO_shape'].unique())
+
+color = ["#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
+             for i in range(number_of_colors)]
+print(color)
+d={}
+for col_shape, color in zip(data['UFO_shape'].unique(), color):
+    d[col_shape] = color
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 def plot_1(country, shape):
     filtered_df = data[data.country.isin(country)]
+    keys = shape & d.keys()
+    print(keys)
+    values = [d[key] for key in keys]
+    print(values)
     filtered_df = data[data.UFO_shape.isin(shape)]
-    fig = go.Figure(data=go.Scattergeo(
-        lon = filtered_df['longitude'],
-        lat = filtered_df['latitude'],
-        text = filtered_df['UFO_shape'],
-        mode = 'markers',
-        marker_color = 'crimson',
-        marker_size = 2
-        ))
+    fig = px.scatter_mapbox(filtered_df, lat="latitude", lon="longitude", color="UFO_shape", hover_data=["UFO_shape","length_of_encounter_seconds"],
+                            color_continuous_scale=px.colors.cyclical.IceFire, zoom=3)
     fig.update_geos(resolution=50, showcoastlines=True, coastlinecolor="RebeccaPurple", showland=True, landcolor="yellow", showocean=True, oceancolor="LightBlue")
     fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True)
     fig.update_layout(
-        title = 'Shape of UFO Sightings around the World<br>(Hover for shapes observed)', 
+        mapbox_style="carto-darkmatter",
+        title = 'Shape of UFO Sightings around the World<br>(Hover for shapes observed)',
         autosize=False,
         hovermode='closest',
         height=800,
